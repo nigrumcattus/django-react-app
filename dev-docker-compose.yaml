@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  backend:
+    image: mypython:dev
+    working_dir: /workdir
+    container_name: backend
+    command: "gunicorn backend.wsgi -b 0.0.0.0:8000"
+    volumes:
+      - ./backend:/workdir
+      - gunicorn:/var/run/gunicorn
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+
+  frontend:
+    image: node:16
+    container_name: frontend
+    command: "npm start"
+    working_dir: /workdir
+    volumes:
+      - ./frontend:/workdir
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+
+volumes:
+  gunicorn:
+  mysql:
+  static:
+networks:
+  backend:
+
